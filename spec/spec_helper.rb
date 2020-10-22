@@ -64,7 +64,7 @@ RSpec.configure do |config|
     # (e.g. via a command-line flag).
     config.default_formatter = "doc"
   end
-  config.order = :random
+  # config.order = :random
   Kernel.srand config.seed
 
 # The settings below are suggested to provide a good initial experience
