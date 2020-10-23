@@ -9,18 +9,19 @@ module RubyEars
     HeadingRgx                = %r{\A (\#{1,6}) \s+ (.*) \z}x
     HtmlCompleteCommentRgx    = %r{\A (\s{0,3}) <! (?: -- .*? -- \s* )+ > \z}x
     HtmlIncompleteCommentRgx  = %r{ \A (\s{0,3}) <!-- .*? \z}x
+    IalRgx                    = %r<\A (\s{0,3}) {:(\s*[^}]+)} \s* \z>x
     ListItemRgx               = %r{ \A (\s{0,3}) ([-*+]) (\s+) (.*) }x
     RulerAsterixRgx           = %r{ \A (\s{0,3}) (?:\*\s?){3,} \z}x
     RulerDashRgx              = %r{ \A (\s{0,3}) (?:-\s?){3,} \z}x
     RulerUnderscoreRgx        = %r{ \A (\s{0,3}) (?:_\s?){3,} \z}x
     SetextUnderlineHeadingRgx = %r{ \A (=|-)+ \s* \z}x
     TableColumnRgx            = %r{\A [\s|:-]+ \z}x
-    TableLineGfmRgx           = %r{\A (\s{0,3}) \| (?: [^|]+ \|)+ \s* \z}x
+    TableLineRgx              = %r{\A (\s{0,3}) \| (?: [^|]+ \|)+ \s* \z}x
+    TableLineGfmRgx           = %r{\A (\s*) .* \s \| \s }x
 
     TextRgx                   = %r{ \A (\s*) (.*)  }x
 
     def type_of(line, lnb: 42)
-require "pry"; binding.pry
       case line
       when RulerDashRgx
         return Ruler.new(
@@ -45,8 +46,12 @@ require "pry"; binding.pry
         )
       when ListItemRgx
         return _make_list_item(Regexp.last_match, lnb)
+      when TableLineRgx
+        return _make_table_line(Regexp.last_match, lnb)
       when TableLineGfmRgx
-        return _make_table_line_gfm(Regexp.last_match, lnb)
+        return _make_table_gfm_line(Regexp.last_match, lnb)
+      when IalRgx
+        return _make_ial(Regexp.last_match, lnb)
       when HtmlCompleteCommentRgx
         return HtmlComment.new(
           complete: true,
@@ -91,6 +96,12 @@ require "pry"; binding.pry
         lnb: lnb)
     end
 
+    module_function def _make_ial(match, lnb)
+    # %r<\A (\s{0,3}) {:(\s*[^}]+)} \s \z>x
+      leading, ial = match.captures
+      Ial.new(attrs: ial.strip, indent: leading.size, lnb: lnb, line: match.string, verbatim: ial)
+    end
+
     module_function def _make_list_item(match, lnb)
       # [_, leading, bullet, spaces, text] = match
       ListItem.new(
@@ -104,7 +115,7 @@ require "pry"; binding.pry
         type: :ul)
     end
 
-    module_function def _make_table_line_gfm match, lnb
+    module_function def _make_table_line match, lnb
       leading = match[1]
       body = match
         .string
@@ -112,15 +123,21 @@ require "pry"; binding.pry
         .sub(%r{\A\|+},"")
         .sub(%r{\|+\z},"")
 
-      columns = split_table_columns(body)
+      columns = _split_table_columns(body)
 
       TableLine.new(
         columns: columns,
-        content: line,
+        content: match.string,
         indent: leading.size,
         is_header: _determine_if_header(columns),
-        line: line,
+        line: match.string,
         lnb: lnb)
+    end
+
+    module_function def _make_table_gfm_line(match, lnb)
+        leading = match[1]
+        columns = _split_table_columns(match.string)
+        TableLine.new( content: match.string, columns: columns, is_header: _determine_if_header(columns), indent: leading.size, line: match.string, lnb: lnb)
     end
 
     module_function def _make_text(match, lnb)
@@ -133,7 +150,7 @@ require "pry"; binding.pry
 
     module_function def _determine_if_header(columns)
       columns
-        .all{ |col| TableColumnRgx.match?(col) }
+        .all?{ |col| TableColumnRgx.match?(col) }
     end
 
 

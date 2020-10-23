@@ -150,14 +150,14 @@ RSpec.describe RubyEars::Scanner do
       [ "{:.a1 .a2}",       Scanner::Ial.new({attrs: ".a1 .a2", verbatim: ".a1 .a2"}) ],
 
       [ "  | a | b | c | ", Scanner::TableLine.new({content: "  | a | b | c | ",
-                                            columns: %w{a b c} }) ],
+                                            columns: %w{a b c}, indent: 2, is_header: false }) ],
   [ "  | a         | ", Scanner::TableLine.new({content: "  | a         | ",
-                                        columns: %w{a} }) ],
+                                        columns: %w{a}, indent: 2, is_header: false }) ],
   [ "  a | b | c  ",    Scanner::TableLine.new({content: "  a | b | c  ",
-                                        columns: %w{a b c} }) ],
+                                        columns: %w{a b c}, is_header: false, indent: 2 }) ],
   [ "  a \\| b | c  ",  Scanner::TableLine.new(content: "  a \\| b | c  ",
                                               columns: [ "a | b",  "c"] ,
-                                              indent: 2) ],
+                                              indent: 2, is_header: false) ],
 
       #
       # Footnote Definitions but no footnote option
