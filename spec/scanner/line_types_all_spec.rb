@@ -13,6 +13,7 @@ RSpec.describe RubyEars::Scanner do
   id9 = %{    [ID9]: http://example.com  "The title"} 
   id10 = %{[ID10]: /url/ "Title with "quotes" inside"} 
   id11 = %{[ID11]: http://example.com "Title with trailing whitespace" } 
+  id12 = %{[ID12]: ]hello } 
 
   [
     [ "",         Scanner::Blank.new() ],
@@ -123,6 +124,7 @@ RSpec.describe RubyEars::Scanner do
 
       [ id10, Scanner::IdDef.new({id: "ID10", url: "/url/", title: "Title with \"quotes\" inside"}) ],
       [ id11, Scanner::IdDef.new({id: "ID11", url: "http://example.com", title: "Title with trailing whitespace"}) ],
+      [ id12, Scanner::IdDef.new({id: "ID12", url: "]hello", title: ""}) ],
 
 
       [ "* ul1", Scanner::ListItem.new({ type: :ul, bullet: "*", content: "ul1", list_indent: 2}) ],

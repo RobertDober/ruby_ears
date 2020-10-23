@@ -10,8 +10,26 @@ module RubyEars
     HtmlCompleteCommentRgx    = %r{\A (\s{0,3}) <! (?: -- .*? -- \s* )+ > \z}x
     HtmlIncompleteCommentRgx  = %r{ \A (\s{0,3}) <!-- .*? \z}x
     IalRgx                    = %r<\A (\s{0,3}) {:(\s*[^}]+)} \s* \z>x
-    ListItemOlRgx             = %r{\A (\s{0,3}) (\d{1,9} [.)]) \s(\s*) (.*)}x
-    ListItemUlRgx             = %r{ \A (\s{0,3}) ([-*+]) (\s+) (.*) }x
+    IdTitlePartRgx            = %r{
+    (?:
+     " (?<title>.*)  "         # in quotes
+     |  ' (?<title>.*)  '         #
+     | \( (?<title>.*) \)         # in parens
+    )? }x
+     IdRgx                     = %r{
+    \A (?<leading>\s{0,3})
+    \[(?<id>\S*?)\]:
+    \s+
+      (?:
+       < (?<url>\S+) >
+       | (?<url>\S+)
+      )
+    \s*
+         #{IdTitlePartRgx}
+      \s*
+      \z }x
+      ListItemOlRgx             = %r{\A (\s{0,3}) (\d{1,9} [.)]) \s(\s*) (.*)}x
+    ListItemUlRgx             = %r{ \A (\s{0,3}) ([-*+]) \s (\s*) (.*) }x
     RulerAsterixRgx           = %r{ \A (\s{0,3}) (?:\*\s?){3,} \z}x
     RulerDashRgx              = %r{ \A (\s{0,3}) (?:-\s?){3,} \z}x
     RulerUnderscoreRgx        = %r{ \A (\s{0,3}) (?:_\s?){3,} \z}x
@@ -45,6 +63,8 @@ module RubyEars
           lnb: lnb,
           type: "_"
         )
+      when IdRgx
+        return _make_id_ref(Regexp.last_match, lnb)
       when ListItemOlRgx
         return _make_ol_list_item(Regexp.last_match, lnb)
       when ListItemUlRgx
@@ -100,35 +120,39 @@ module RubyEars
     end
 
     module_function def _make_ial(match, lnb)
-    # %r<\A (\s{0,3}) {:(\s*[^}]+)} \s \z>x
+      # %r<\A (\s{0,3}) {:(\s*[^}]+)} \s \z>x
       leading, ial = match.captures
       Ial.new(attrs: ial.strip, indent: leading.size, lnb: lnb, line: match.string, verbatim: ial)
     end
 
+    module_function def _make_id_ref(match, lnb)
+      leading, id, url, title = match.named_captures.values_at(*%w[leading id url title])
+      IdDef.new(id: id, url: url, title: title, indent: leading.size, line: match.string, lnb: lnb)
+    end
+
     module_function def _make_ol_list_item(match, lnb)
-        # [_, leading, bullet, spaces, text] = match
-        leading, bullet, spaces = match.values_at(1, 2, 3)
-        sl = spaces.size
-        sl1 = sl > 3 ? 1 : sl.succ
-        sl2 = sl1 + bullet.size
-        ListItem.new(
-          type: :ol,
-          bullet: bullet,
-          content: match.values_at(3,4).join,
-          indent: leading.size,
-          line: match.string,
-          list_indent:  leading.size + sl2,
-          lnb: lnb)
+      leading, bullet, spaces = match.values_at(1, 2, 3)
+      sl = spaces.size
+      sl1 = sl > 3 ? 1 : sl.succ
+      sl2 = sl1 + bullet.size
+      ListItem.new(
+        type: :ol,
+        bullet: bullet,
+        content: match.values_at(3,4).join,
+        indent: leading.size,
+        line: match.string,
+        list_indent:  leading.size + sl2,
+        lnb: lnb)
     end
     module_function def _make_ul_list_item(match, lnb)
-      # [_, leading, bullet, spaces, text] = match
+      leading, bullet, spaces = match.values_at(1, 2, 3)
       ListItem.new(
-        bullet: match[2],
-        content: match[4],
-        indent: match[1].size,
+        bullet: bullet,
+        content: match.values_at(3, 4).join,
+        indent: leading.size,
         initial_indent: 0,
         line: match.string,
-        list_indent: _compute_list_indent(match),
+        list_indent: match.values_at(1, 2, 3).join.size.succ,
         lnb: lnb,
         type: :ul)
     end
@@ -153,9 +177,9 @@ module RubyEars
     end
 
     module_function def _make_table_gfm_line(match, lnb)
-        leading = match[1]
-        columns = _split_table_columns(match.string)
-        TableLine.new( content: match.string, columns: columns, is_header: _determine_if_header(columns), indent: leading.size, line: match.string, lnb: lnb)
+      leading = match[1]
+      columns = _split_table_columns(match.string)
+      TableLine.new( content: match.string, columns: columns, is_header: _determine_if_header(columns), indent: leading.size, line: match.string, lnb: lnb)
     end
 
     module_function def _make_text(match, lnb)
