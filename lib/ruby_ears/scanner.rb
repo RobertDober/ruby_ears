@@ -10,7 +10,8 @@ module RubyEars
     HtmlCompleteCommentRgx    = %r{\A (\s{0,3}) <! (?: -- .*? -- \s* )+ > \z}x
     HtmlIncompleteCommentRgx  = %r{ \A (\s{0,3}) <!-- .*? \z}x
     IalRgx                    = %r<\A (\s{0,3}) {:(\s*[^}]+)} \s* \z>x
-    ListItemRgx               = %r{ \A (\s{0,3}) ([-*+]) (\s+) (.*) }x
+    ListItemOlRgx             = %r{\A (\s{0,3}) (\d{1,9} [.)]) \s(\s*) (.*)}x
+    ListItemUlRgx             = %r{ \A (\s{0,3}) ([-*+]) (\s+) (.*) }x
     RulerAsterixRgx           = %r{ \A (\s{0,3}) (?:\*\s?){3,} \z}x
     RulerDashRgx              = %r{ \A (\s{0,3}) (?:-\s?){3,} \z}x
     RulerUnderscoreRgx        = %r{ \A (\s{0,3}) (?:_\s?){3,} \z}x
@@ -44,8 +45,10 @@ module RubyEars
           lnb: lnb,
           type: "_"
         )
-      when ListItemRgx
-        return _make_list_item(Regexp.last_match, lnb)
+      when ListItemOlRgx
+        return _make_ol_list_item(Regexp.last_match, lnb)
+      when ListItemUlRgx
+        return _make_ul_list_item(Regexp.last_match, lnb)
       when TableLineRgx
         return _make_table_line(Regexp.last_match, lnb)
       when TableLineGfmRgx
@@ -102,7 +105,22 @@ module RubyEars
       Ial.new(attrs: ial.strip, indent: leading.size, lnb: lnb, line: match.string, verbatim: ial)
     end
 
-    module_function def _make_list_item(match, lnb)
+    module_function def _make_ol_list_item(match, lnb)
+        # [_, leading, bullet, spaces, text] = match
+        leading, bullet, spaces = match.values_at(1, 2, 3)
+        sl = spaces.size
+        sl1 = sl > 3 ? 1 : sl.succ
+        sl2 = sl1 + bullet.size
+        ListItem.new(
+          type: :ol,
+          bullet: bullet,
+          content: match.values_at(3,4).join,
+          indent: leading.size,
+          line: match.string,
+          list_indent:  leading.size + sl2,
+          lnb: lnb)
+    end
+    module_function def _make_ul_list_item(match, lnb)
       # [_, leading, bullet, spaces, text] = match
       ListItem.new(
         bullet: match[2],

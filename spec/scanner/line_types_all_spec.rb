@@ -144,7 +144,7 @@ RSpec.describe RubyEars::Scanner do
       [ "-",        Scanner::SetextUnderlineHeading.new({level: 2}) ],
       [ "= and so", Scanner::Text.new({content: "= and so"}) ],
 
-      [ "   (title)", Scanner::Text.new({content: "(title)", line: "   (title)"}) ],
+      [ "   (title)", Scanner::Text.new(content: "(title)", indent: 3, line: "   (title)") ],
 
       [ "{: .attr }",       Scanner::Ial.new({attrs: ".attr", verbatim: " .attr "}) ],
       [ "{:.a1 .a2}",       Scanner::Ial.new({attrs: ".a1 .a2", verbatim: ".a1 .a2"}) ],
