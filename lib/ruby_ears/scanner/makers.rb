@@ -3,9 +3,25 @@ module RubyEars
 
     private
 
+    module_function def _attribute_escape(string)
+      string
+        .gsub("&", "&amp;")
+        .gsub("<", "&lt;")
+    end
+
     module_function def _compute_list_indent(match)
       sl = match[3].size
       match[1].size + match[2].size + (sl > 4 ? 1 : sl)
+    end
+
+    module_function def _make_fence(match, lnb)
+      leading, fence, language = match.captures
+      Fence.new(
+        delimiter: fence,
+        language: _attribute_escape(language),
+        indent: leading.size,
+        line: match.string,
+        lnb: lnb)
     end
 
     module_function def _make_heading(match, lnb)
@@ -47,7 +63,7 @@ module RubyEars
     module_function def _make_indent(match, lnb)
       leading_spaces, more_spaces, rest = match.captures
       Indent.new(
-        content: rest,
+        content: "#{more_spaces}#{rest}",
         indent: leading_spaces.size + more_spaces.size,
         level: leading_spaces.size / 4,
         line: match.string,

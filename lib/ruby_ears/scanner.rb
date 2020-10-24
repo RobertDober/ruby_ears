@@ -7,6 +7,7 @@ module RubyEars
 
     BlankRgx                  = %r{\A \s* \z}x
     BlockQuoteRgx             = %r{\A (\s{0,3}) >(?:(\s*)|\s?(.*)) \z}x
+    FenceRgx                  = %r{\A (\s*) (`{3,}|~{3,}) \s* ([^`\s]*) \s* \z}x
     HeadingRgx                = %r{\A (\#{1,6}) \s+ (.*) \z}x
     HtmlCompleteCommentRgx    = %r{\A (\s{0,3}) <! (?: -- .*? -- \s* )+ > \z}x
     HtmlIncompleteCommentRgx  = %r{\A (\s{0,3}) <!-- .*? \z}x
@@ -15,7 +16,6 @@ module RubyEars
     HtmlOnelineVoidTagRgx     = %r{\A < ( area | br | hr | img | wbr ) \s .*? >}x
     HtmlOnelineCompleteTagRgx = %r{\A < ([-\w]+?) (?:\s.*)? > .* </\1>}x
     HtmlOnelineSimleTagRgx    = %r{\A < ([-\w]+?) (?:\s.*)? />}x
-
     IalRgx                    = %r<\A (\s{0,3}) {:(\s*[^}]+)} \s* \z>x
     IdTitlePartRgx            = %r{
     (?:
@@ -35,7 +35,7 @@ module RubyEars
          #{IdTitlePartRgx}
       \s*
       \z }x
-    IndentRgx                 = %r{\A (\s{4,}) (\s*) (.*) \z}x
+    IndentRgx                 = %r{\A (\s{4}+) (\s*) (.*) \z}x
     ListItemOlRgx             = %r{\A (\s{0,3}) (\d{1,9} [.)]) \s(\s*) (.*)}x
     ListItemUlRgx             = %r{ \A (\s{0,3}) ([-*+]) \s (\s*) (.*) }x
     RulerAsterixRgx           = %r{ \A (\s{0,3}) (?:\*\s?){3,} \z}x
@@ -52,6 +52,8 @@ module RubyEars
       case line
       when IndentRgx
         return _make_indent(Regexp.last_match, lnb)
+      when FenceRgx
+        return _make_fence(Regexp.last_match, lnb)
       when RulerDashRgx
         return Ruler.new(
           indent: Regexp.last_match[1].size,
