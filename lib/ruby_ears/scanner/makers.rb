@@ -16,6 +16,11 @@ module RubyEars
         lnb: lnb)
     end
 
+    module_function def _make_html_close_tag(match, lnb)
+      leading_spaces, tag = match.captures
+      HtmlCloseTag.new(tag: tag, indent: leading_spaces.size, line: match.string, lnb: lnb)
+    end
+
     module_function def _make_html_oneline_tag(match, lnb)
       HtmlOneLine.new(
         content: match.string,

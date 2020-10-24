@@ -9,7 +9,8 @@ module RubyEars
     BlockQuoteRgx             = %r{\A (\s{0,3}) >(?:(\s*)|\s?(.*)) \z}x
     HeadingRgx                = %r{\A (\#{1,6}) \s+ (.*) \z}x
     HtmlCompleteCommentRgx    = %r{\A (\s{0,3}) <! (?: -- .*? -- \s* )+ > \z}x
-    HtmlIncompleteCommentRgx  = %r{ \A (\s{0,3}) <!-- .*? \z}x
+    HtmlIncompleteCommentRgx  = %r{\A (\s{0,3}) <!-- .*? \z}x
+    HtmlCloseTagRgx           = %r{\A (\s{0,3}) <\/ ([-\w]+?) >}x
     HtmlOpenTagRgx            = %r{ \A <([-\w]+?) (?:\s.*)? >}x
     HtmlOnelineVoidTagRgx     = %r{\A < ( area | br | hr | img | wbr ) \s .*? >}x
     HtmlOnelineCompleteTagRgx = %r{\A < ([-\w]+?) (?:\s.*)? > .* </\1>}x
@@ -72,6 +73,8 @@ module RubyEars
           lnb: lnb,
           type: "_"
         )
+      when HtmlCloseTagRgx
+        return _make_html_close_tag(Regexp.last_match, lnb)
       when HtmlOnelineCompleteTagRgx, HtmlOnelineSimleTagRgx,HtmlOnelineVoidTagRgx
         return _make_html_oneline_tag(Regexp.last_match, lnb)
       when HtmlOpenTagRgx
