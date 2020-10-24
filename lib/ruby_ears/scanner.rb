@@ -6,7 +6,7 @@ module RubyEars
     module_function
 
     BlankRgx                  = %r{\A \s* \z}x
-    BlockQuoteRgx             = %r{\A (\s{0,3}) >(?:(\s*)|\s?(.*)) \z}x
+    BlockQuoteRgx             = %r{\A (\s{0,3}) > \s? (.*) \z}x
     FenceRgx                  = %r{\A (\s*) (`{3,}|~{3,}) \s* ([^`\s]*) \s* \z}x
     HeadingRgx                = %r{\A (\#{1,6}) \s+ (.*) \z}x
     HtmlCompleteCommentRgx    = %r{\A (\s{0,3}) <! (?: -- .*? -- \s* )+ > \z}x
@@ -50,6 +50,8 @@ module RubyEars
 
     def type_of(line, lnb: 42)
       case line
+      when BlankRgx
+        return Blank.new(lnb: lnb)
       when IndentRgx
         return _make_indent(Regexp.last_match, lnb)
       when FenceRgx
@@ -113,6 +115,8 @@ module RubyEars
           lnb: lnb)
       when HeadingRgx
         return _make_heading(Regexp.last_match, lnb)
+      when BlockQuoteRgx
+        return _make_block_quote(Regexp.last_match, lnb)
       when BlankRgx
         return Blank.new(lnb: lnb)
       when TextRgx

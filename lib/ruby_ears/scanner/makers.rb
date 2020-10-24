@@ -14,6 +14,14 @@ module RubyEars
       match[1].size + match[2].size + (sl > 4 ? 1 : sl)
     end
 
+    module_function def _make_block_quote(match, lnb)
+      BlockQuote.new(
+        content: match[2],
+        indent: match[1].size,
+        line: match.string,
+        lnb: lnb)
+    end
+
     module_function def _make_fence(match, lnb)
       leading, fence, language = match.captures
       Fence.new(

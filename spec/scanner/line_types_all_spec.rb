@@ -45,10 +45,10 @@ RSpec.describe RubyEars::Scanner do
     [ "###### H6",  Scanner::Heading.new({level: 6, content: "H6"}) ],
     [ "####### H7", Scanner::Text.new({content: "####### H7"}) ],
 
-    [ "> quote",    Scanner::BlockQuote.new({content: "quote"}) ],
-    [ ">    quote", Scanner::BlockQuote.new({content: "   quote"}) ],
-    [ ">quote",     Scanner::BlockQuote.new({content: "quote"}) ],
-    [ " >  quote",     Scanner::BlockQuote.new({content: " quote"}) ],
+    [ "> quote0",    Scanner::BlockQuote.new(content: "quote0") ],
+    [ ">    quote1", Scanner::BlockQuote.new(content: "   quote1") ],
+    [ ">quote2",     Scanner::BlockQuote.new(content: "quote2") ],
+    [ " >  quote3",     Scanner::BlockQuote.new(content: " quote3", indent: 1) ],
 
     #1234567890123
     [ "   a",         Scanner::Text.new(indent: 3,content: "a", line: "   a") ],
