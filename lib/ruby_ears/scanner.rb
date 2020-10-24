@@ -28,7 +28,8 @@ module RubyEars
          #{IdTitlePartRgx}
       \s*
       \z }x
-      ListItemOlRgx             = %r{\A (\s{0,3}) (\d{1,9} [.)]) \s(\s*) (.*)}x
+    IndentRgx                 = %r{\A (\s{4,}) (\s*) (.*) \z}x
+    ListItemOlRgx             = %r{\A (\s{0,3}) (\d{1,9} [.)]) \s(\s*) (.*)}x
     ListItemUlRgx             = %r{ \A (\s{0,3}) ([-*+]) \s (\s*) (.*) }x
     RulerAsterixRgx           = %r{ \A (\s{0,3}) (?:\*\s?){3,} \z}x
     RulerDashRgx              = %r{ \A (\s{0,3}) (?:-\s?){3,} \z}x
@@ -42,6 +43,8 @@ module RubyEars
 
     def type_of(line, lnb: 42)
       case line
+      when IndentRgx
+        return _make_indent(Regexp.last_match, lnb)
       when RulerDashRgx
         return Ruler.new(
           indent: Regexp.last_match[1].size,
@@ -127,7 +130,17 @@ module RubyEars
 
     module_function def _make_id_ref(match, lnb)
       leading, id, url, title = match.named_captures.values_at(*%w[leading id url title])
-      IdDef.new(id: id, url: url, title: title, indent: leading.size, line: match.string, lnb: lnb)
+      IdDef.new(id: id, url: url, title: title||"", indent: leading.size, line: match.string, lnb: lnb)
+    end
+
+    module_function def _make_indent(match, lnb)
+      leading_spaces, more_spaces, rest = match.captures
+      Indent.new(
+        content: rest,
+        indent: leading_spaces.size + more_spaces.size,
+        level: leading_spaces.size / 4,
+        line: match.string,
+        lnb: lnb)
     end
 
     module_function def _make_ol_list_item(match, lnb)
