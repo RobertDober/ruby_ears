@@ -45,8 +45,16 @@ module RubyEars
     TableColumnRgx            = %r{\A [\s|:-]+ \z}x
     TableLineRgx              = %r{\A (\s{0,3}) \| (?: [^|]+ \|)+ \s* \z}x
     TableLineGfmRgx           = %r{\A (\s*) .* \s \| \s }x
-
     TextRgx                   = %r{ \A (\s*) (.*)  }x
+
+    def scan_lines(lines)
+      # N.B. First line is artificially added empty line, hence index **is** the real line number
+      lines
+        .each_with_index
+        .map do |line, lnb|
+          type_of(line, lnb: lnb)
+        end
+    end
 
     def type_of(line, lnb: 42)
       case line
