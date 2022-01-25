@@ -1,39 +1,34 @@
-require "ostruct"
+require 'lab42/data_class'
 module RubyEars
-  module Scanner
-    class BaseStruct < OpenStruct
-      def initialize *args
-        super(*args)
-        self.indent ||= 0
-      end
+
+  module Scanner extend self
+
+    def base_factory(*a, **k)
+      k_ = {
+        content: "",
+        indent: 0,
+        line: "",
+        lnb: 0
+      }.merge(k)
+      DataClass(*a, **k_)
     end
 
-    Blank                  = Class.new BaseStruct
-    BlockQuote             = Class.new BaseStruct
-    Fence                  = Class.new BaseStruct
-    Heading                = Class.new BaseStruct
-    HtmlComment            = Class.new BaseStruct
-    HtmlCloseTag           = Class.new BaseStruct
-    HtmlOneLine            = Class.new BaseStruct
-    HtmlOpenTag            = Class.new BaseStruct
-    Ial                    = Class.new BaseStruct
-    IdDef                  = Class.new BaseStruct
-    Indent                 = Class.new BaseStruct
-    Ruler                  = Class.new BaseStruct
-    SetextUnderlineHeading = Class.new BaseStruct
-    TableLine              = Class.new BaseStruct
-    Text                   = Class.new BaseStruct
+    Blank                  = base_factory
+    BlockQuote             = base_factory
+    Fence                  = base_factory delimiter: "```", language: ""
+    Heading                = base_factory :level
+    HtmlComment            = base_factory lnb: 0, complete: false
+    HtmlCloseTag           = base_factory :tag
+    HtmlOneLine            = base_factory :tag
+    HtmlOpenTag            = base_factory :tag
+    Ial                    = base_factory :attrs, :verbatim
+    IdDef                  = base_factory :id, :url, title: ""
+    Indent                 = base_factory :level
+    ListItem               = base_factory :list_indent, bullet: '-', type: :ul
+    Ruler                  = base_factory :type
+    SetextUnderlineHeading = base_factory :level
+    TableLine              = base_factory columns: [], is_header: false
+    Text                   = base_factory
 
-    class Blank < BaseStruct
-      def line= _; end
-      def indent= _; end
-    end
-
-    class ListItem < BaseStruct
-      def initialize *args
-        super(*args)
-        self.initial_indent ||= 0
-      end
-    end
   end
 end

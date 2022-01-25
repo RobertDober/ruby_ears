@@ -1,14 +1,10 @@
 require "ruby_ears/parser"
 RSpec.describe RubyEars::Parser, type: :parser do
-  context "Empty" do
-    it "returns empty" do
-       expect(parse_ok("")).to be_empty 
-    end
-  end
+  Block = RubyEars::Parser::Block
+
   context "Just text => a para" do
-    it "simple example" do
-      expect(parse_ok("simple example")).to eq([quad("p", "simple_example")])
-      # expect(parse_ok("simple example")).to eq([])
+    it "gets us a block" do
+      expect(to_blocks("simple_example")).to eq([Block::Para.new(lnb: 1, atts: {}, lines: ["simple_example"])])
     end
   end
 end

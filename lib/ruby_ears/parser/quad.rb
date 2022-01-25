@@ -4,6 +4,15 @@ module RubyEars
       Error = Class.new RuntimeError
       attr_reader :atts, :content, :meta, :tag
 
+      def ==(other)
+        return false unless self.class === other
+        other.tag == tag && other.atts == atts && other.content == content && other.meta == meta 
+      end
+
+      def to_h
+        {atts: atts, content: content, meta: meta, tag: tag}
+      end
+
       private
 
       def initialize(tag:, atts: {}, content: [], meta: {} )

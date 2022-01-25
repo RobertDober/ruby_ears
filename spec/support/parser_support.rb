@@ -22,6 +22,13 @@ module ParserSupport
     end
   end
 
+  def to_blocks(lines)
+    lines = lines.split("\n") if String === lines
+    lines = RubyEars::Scanner.scan_lines(lines)
+    blocks, _, _ = RubyEars::Parser.lines_to_blocks(lines)
+    blocks
+  end
+
   private
 
   def _parse(lines)
@@ -32,3 +39,4 @@ end
 RSpec.configure do |conf|
   conf.include ParserSupport, type: :parser
 end
+#  SPDX-License-Identifier: Apache-2.0

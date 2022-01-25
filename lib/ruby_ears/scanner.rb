@@ -59,7 +59,7 @@ module RubyEars
     def type_of(line, lnb: 42)
       case line
       when BlankRgx
-        return Blank.new(lnb: lnb)
+        return Blank.new(lnb: lnb, line: line)
       when IndentRgx
         return _make_indent(Regexp.last_match, lnb)
       when FenceRgx

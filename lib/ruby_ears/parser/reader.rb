@@ -1,7 +1,7 @@
 module RubyEars
   module Parser
 
-    module_function def _read_para_lines(rst, result)
+    def _read_para_lines(rst, result)
       if rst.empty?
         [result.flatten, []]
       else

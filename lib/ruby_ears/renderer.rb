@@ -1,26 +1,27 @@
 module RubyEars
-  module Renderer
+  module Renderer extend self
     Block = RubyEars::Parser::Block
     Quad  = RubyEars::Parser::Quad
-   
-    module_function def render(blocks, options)
-      [:ok, blocks.map{|blk| _render_block(blk, options)}, []]
+
+    def render(blocks, options)
+      ast = blocks.map{|blk| _render_block(blk, options)}
+      [:ok, ast, []]
     end
 
 
     private
 
-    module_function def quad(tag, content, atts: {}, meta: {})
+    def quad(tag, content, atts: {}, meta: {})
       Quad.new(atts: atts, content: content, meta: meta, tag: tag.to_s)
     end
 
-    module_function def _render_block(block, options)
-    require "pry"; binding.pry
+    def _render_block(block, options)
       case block
       when Block::Para
-        quad(:para, block.lines )
+        quad(:p, block.lines )
+      else
+        raise NotImplementedError, "unknown block #{block.inspect}"
       end
-      
     end
 
   end
