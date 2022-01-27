@@ -36,7 +36,7 @@ module RubyEars
       when Scanner::Blank
         [rst, result]
       when Scanner::ListItem
-        RubyEars::Parser::ListParser.parse_list(fst, rst, result)
+        RubyEars::Parser::ListParser.parse_list([fst, *rst], result)
       else
         raise NotImplementedError, "coming soon:\n\t#{fst.inspect}"
       end
@@ -51,7 +51,7 @@ module RubyEars
       lines = reversed_para_lines
         .reverse
         .map(&:line)
-      [rest, result.unshift(Block::Para.new(lines: lines, lnb: fst.lnb.succ))]
+      [rest, [Para.new(lines: lines, lnb: fst.lnb.succ), *result]]
     end
 
   end

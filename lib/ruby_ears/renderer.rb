@@ -1,6 +1,10 @@
+require_relative 'parser/block'
+require_relative 'parser/quad'
+
 module RubyEars
   module Renderer extend self
     Block = RubyEars::Parser::Block
+    Para = RubyEars::Parser::Para
     Quad  = RubyEars::Parser::Quad
 
     def render(blocks, options)
@@ -17,7 +21,7 @@ module RubyEars
 
     def _render_block(block, options)
       case block
-      when Block::Para
+      when Para
         quad(:p, block.lines )
       else
         raise NotImplementedError, "unknown block #{block.inspect}"

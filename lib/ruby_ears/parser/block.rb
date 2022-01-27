@@ -13,19 +13,20 @@ module RubyEars
       is_spaced: false,
       start: "",
       type: :ul do
-        def self.make(list_item)
+        def self.make(li)
           new(bullet: li.bullet, indent: li.list_indent, lnb: li.lnb, type: li.type)
         end
       end
 
-    Para = DataClass \
-      attrs: nil,
-      lnb: 0,
-      lines: []
+      Para = DataClass \
+        attrs: nil,
+        lnb: 0,
+        lines: []
+
+      class Block < OpenStruct
+        Blank   = Class.new self
+        Heading = Class.new self
+      end
   end
 
-  class Block < OpenStruct
-    Blank   = Class.new self
-    Heading = Class.new self
-  end
 end

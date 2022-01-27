@@ -132,7 +132,7 @@ module RubyEars
         bullet: bullet,
         content: match.values_at(3, 4).join,
         indent: leading.size,
-        initial_indent: 0,
+        list_indent: 0,
         line: match.string,
         list_indent: match.values_at(1, 2, 3).join.size.succ,
         lnb: lnb,

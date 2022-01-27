@@ -4,12 +4,12 @@ module RubyEars
     module Helper
       def parse_upto(state, parse_fn, term_fn)
         loop do
-          case term_fn.(state) in
-            when [:continue, state_]
-              state = parse_fn.(state)
-            when [:halt, state_]
+          case term_fn.(state)
+            in [:continue, state_]
+              state = parse_fn.(state_)
+            in [:halt, state_]
               return state_
-            when x
+            in x
               raise "Illegal return value: #{x} from #{term_fn}"
           end
         end

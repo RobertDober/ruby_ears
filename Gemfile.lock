@@ -19,7 +19,7 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    lab42_data_class (0.3.0)
+    lab42_data_class (0.3.1)
     method_source (1.0.0)
     nokogiri (1.13.1-x86_64-darwin)
       racc (~> 1.4)
