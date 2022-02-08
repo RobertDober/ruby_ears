@@ -10,10 +10,10 @@ module RubyEars
       include Helper
       def parse_list(input, result)
         input => [list_item, *rest]
-        state = State.new \
+        state = State.new(
           list:  List.make(list_item),
           list_item: list_item,
-          rest_to_parse: [list_item, *rest]
+          rest_to_parse: [list_item, *rest])
 
         _parse_list(state) => {list:, rest_to_parse:}
         [rest_to_parse, [list, *result]]

@@ -12,5 +12,6 @@ gem "pry-doc"
 gem "rspec"
 gem "solargraph"
 gem "treetop", "~> 1.6.11"
+gem "zeitwerk", "~> 2.5.4"
 
 # gem "rails"
