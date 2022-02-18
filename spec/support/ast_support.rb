@@ -5,7 +5,7 @@ module AstSupport
     {tag: tag, content: content}
   end
 
-  %[li p ul]
+  %i[li p ul]
     .each do |tag_|
       define_method tag_ do |*content|
         tag(tag_, *content)

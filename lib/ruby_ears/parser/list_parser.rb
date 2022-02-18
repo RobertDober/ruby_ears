@@ -22,20 +22,20 @@ module RubyEars
       private
 
       def _behead(str, chars)
-        str.sub(%r{\A\s{0, #{chars}}, "")
+        str.sub(%r{\A\s{0, #{chars}}}, "")
       end
 
       def _end_of_body
         -> state do
           return _finish_body(state) if state.rest_to_parse.empty?
-          state => {rest_to_parse: [item, *]
-                    return [:continue, state] if Line::Blank === item
-                    return _finish_body(state) if Line::Heading === item
-                    if item.indent < state.list.indent
-                      _finish_body(state)
-                    else
-                      [:continue, state]
-                    end
+          state => {rest_to_parse: [item, *]}
+          return [:continue, state] if Line::Blank === item
+          return _finish_body(state) if Line::Heading === item
+          if item.indent < state.list.indent
+            _finish_body(state)
+          else
+            [:continue, state]
+          end
         end
       end
 
@@ -90,7 +90,7 @@ module RubyEars
         [:halt, new_state]
       end
 
-      def _parse_header(
+      def _parse_header
         -> state do
           state => {rest_to_parse: [line, *rest], header_content:}
           new_header_content = [line.line, *header_content]
