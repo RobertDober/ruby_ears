@@ -1,4 +1,3 @@
-require "ruby_ears/parser"
 module AstSupport
   def tag(tag, *content)
     { tag:, content: }

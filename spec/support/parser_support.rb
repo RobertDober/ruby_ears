@@ -1,4 +1,3 @@
-require "ruby_ears/parser"
 module ParserSupport
   def quad(tag, content, atts: {}, meta: {})
     content = [content] if content.is_a?(String)

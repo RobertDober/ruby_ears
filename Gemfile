@@ -12,6 +12,7 @@ group :development, :test do
   gem "pry-doc"
   gem "rspec"
   gem "rubocop", "~> 1.25.1"
+  gem 'simplecov', '~> 0.21.2'
   gem 'simplecov-lcov', '~> 0.8.0'
   gem "solargraph"
   gem "treetop", "~> 1.6.11"
