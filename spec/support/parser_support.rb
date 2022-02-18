@@ -1,9 +1,8 @@
 require "ruby_ears/parser"
 module ParserSupport
-
   def quad(tag, content, atts: {}, meta: {})
-    content = [content] if String === content
-    RubyEars::Parser::Quad.new(tag: tag, content: content, atts: atts, meta: meta)
+    content = [content] if content.is_a?(String)
+    RubyEars::Parser::Quad.new(tag:, content:, atts:, meta:)
   end
 
   def parse_ok(lines)
@@ -23,9 +22,9 @@ module ParserSupport
   end
 
   def to_blocks(lines)
-    lines = lines.split("\n") if String === lines
+    lines = lines.split("\n") if lines.is_a?(String)
     lines = RubyEars::Scanner.scan_lines(lines)
-    blocks, _, _ = RubyEars::Parser.lines_to_blocks(lines)
+    blocks, = RubyEars::Parser.lines_to_blocks(lines)
     blocks
   end
 

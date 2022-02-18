@@ -2,16 +2,17 @@
 
 source "https://rubygems.org"
 
-git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+# git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-# For this particular project only dev and test envs are needed
-gem "debug"
-gem "lab42_data_class"
-gem "pry-byebug"
-gem "pry-doc"
-gem "rspec"
-gem "solargraph"
-gem "treetop", "~> 1.6.11"
-gem "zeitwerk", "~> 2.5.4"
+gemspec
 
-# gem "rails"
+group :development, :test do
+  gem "debug"
+  gem "pry-byebug"
+  gem "pry-doc"
+  gem "rspec"
+  gem "rubocop", "~> 1.25.1"
+  gem 'simplecov-lcov', '~> 0.8.0'
+  gem "solargraph"
+  gem "treetop", "~> 1.6.11"
+end

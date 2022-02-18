@@ -12,10 +12,26 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
-PROJECT_ROOT = File.expand_path "../..", __FILE__
-$:.unshift File.join(PROJECT_ROOT, "lib")
+require 'simplecov'
+SimpleCov.start do
+  add_filter "/spec/"
+  if ENV['CI']
+    require 'simplecov-lcov'
 
-Dir[File.join(PROJECT_ROOT,"spec/support/**/*.rb")].each do |f|
+    SimpleCov::Formatter::LcovFormatter.config do |c|
+      c.report_with_single_file = true
+      c.single_report_path = 'coverage/lcov.info'
+    end
+
+    formatter SimpleCov::Formatter::LcovFormatter
+  end
+
+  add_filter %w[version.rb initializer.rb]
+end
+PROJECT_ROOT = File.expand_path '..', __dir__
+$LOAD_PATH.unshift File.join(PROJECT_ROOT, "lib")
+
+Dir[File.join(PROJECT_ROOT, "spec/support/**/*.rb")].each do |f|
   # puts "require #{f}"
   require f
 end
@@ -54,7 +70,7 @@ RSpec.configure do |config|
 
   #
   # Chosen from below:
-  # ------------------ 
+  # ------------------
   config.filter_run_when_matching :focus
   config.example_status_persistence_file_path = "spec/examples.txt"
   config.warnings = true

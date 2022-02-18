@@ -1,8 +1,7 @@
 require "ruby_ears/parser"
 module AstSupport
-
   def tag(tag, *content)
-    {tag: tag, content: content}
+    { tag:, content: }
   end
 
   %i[li p ul]

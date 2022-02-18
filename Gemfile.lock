@@ -1,3 +1,10 @@
+PATH
+  remote: .
+  specs:
+    ruby_ears (0.1.0)
+      lab42_data_class (~> 0.3.3)
+      zeitwerk (~> 2.5.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -71,6 +78,7 @@ GEM
     rubocop-ast (1.15.2)
       parser (>= 3.0.1.1)
     ruby-progressbar (1.11.0)
+    simplecov-lcov (0.8.0)
     solargraph (0.44.3)
       backport (~> 1.2)
       benchmark
@@ -102,13 +110,14 @@ PLATFORMS
 
 DEPENDENCIES
   debug
-  lab42_data_class
   pry-byebug
   pry-doc
   rspec
+  rubocop (~> 1.25.1)
+  ruby_ears!
+  simplecov-lcov (~> 0.8.0)
   solargraph
   treetop (~> 1.6.11)
-  zeitwerk (~> 2.5.4)
 
 BUNDLED WITH
    2.3.5
