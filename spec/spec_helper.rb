@@ -28,8 +28,10 @@ SimpleCov.start do
 
   add_filter %w[version.rb initializer.rb]
 end
+
 PROJECT_ROOT = File.expand_path '..', __dir__
 $LOAD_PATH.unshift File.join(PROJECT_ROOT, "lib")
+require "ears"
 
 Dir[File.join(PROJECT_ROOT, "spec/support/**/*.rb")].each do |f|
   # puts "require #{f}"
