@@ -5,11 +5,16 @@ module Ears
     extend self
     include Tokens
 
+    Bullets = [
+      "\\*", "-", "\\+", "\\d+\\."
+    ].join("|").freeze
+
     BacktixRgx = / ((?<!\\) `+) /x
     BlankRgx = /\A \s* \z/x
     HeaderRgx = /\A (\s*) (\#{1,6}) \s (.*) /x
     IndentRgx = /\A (\s{4,}) (.*) /x
     LeadingSpacesRgx = /\A (\s*) (.*) /x
+    ListItemRgx = /\A (\s*) (#{Bullets}) (\s+) (.*) /x
 
     def scan(line, lnb)
       case line
@@ -26,7 +31,7 @@ module Ears
 
     def _get_rest_from_pair(pair)
       pair => [token, :eol]
-      case token.line.split(BacktixRgx, 2)
+      case token.content.split(BacktixRgx, 2)
       in [ prefix, backtix, suffix ]
         Pair(token.merge(content: prefix), backtix + suffix)
       else
@@ -44,20 +49,31 @@ module Ears
       Pair(Header.new(indent: spaces.length, content: rest, level: headers.length, line:, lnb:), :eol)
     end
 
+    def _scan_list_item(line, lnb, match)
+      match => [_, spaces, bullet, li_space, rest]
+      list_indent = spaces.length + bullet.length + li_space.length
+      Pair(ListItem.new(line:, list_indent:, indent: spaces.length, content: rest, bullet: bullet), :eol)
+    end
+
     def _scan_text(line, lnb)
       LeadingSpacesRgx.match(line) => [_, spaces, text]
       Pair(Text.new(content: text, indent: spaces.length, line:, lnb:), :eol)
     end
 
     def _scan_with_rest(line, lnb)
-      pair =
+      pair = _scan_with_rest_base(line, lnb)
+      _get_rest_from_pair(pair)
+    end
+
+    def _scan_with_rest_base(line, lnb)
         case line
         when HeaderRgx
           _scan_header(line, lnb, Regexp.last_match)
+        when ListItemRgx
+          _scan_list_item(line, lnb, Regexp.last_match)
         else
           _scan_text(line, lnb)
         end
-      _get_rest_from_pair(pair)
     end
   end
 end

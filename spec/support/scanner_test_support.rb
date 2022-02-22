@@ -18,6 +18,10 @@ module Support
       Ears::Tokens::Indent.new(**args)
     end
 
+    def li(**args)
+      Ears::Tokens::ListItem.new(**args)
+    end
+
     def text(**args)
       Ears::Tokens::Text.new(**args)
     end
