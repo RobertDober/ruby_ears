@@ -29,13 +29,12 @@ module Ears
 
     private
 
-    def _get_rest_from_pair(pair)
-      pair => [token, :eol]
+    def _get_rest_from_pair(token)
       case token.content.split(BacktixRgx, 2)
       in [ prefix, backtix, suffix ]
         Pair(token.merge(content: prefix), backtix + suffix)
       else
-        pair
+        Pair(token, :eol)
       end
     end
 
@@ -46,34 +45,34 @@ module Ears
 
     def _scan_header(line, lnb, match)
       match => [_, spaces, headers, rest]
-      Pair(Header.new(indent: spaces.length, content: rest, level: headers.length, line:, lnb:), :eol)
+      Header.new(indent: spaces.length, content: rest, level: headers.length, line:, lnb:)
     end
 
     def _scan_list_item(line, lnb, match)
       match => [_, spaces, bullet, li_space, rest]
       list_indent = spaces.length + bullet.length + li_space.length
-      Pair(ListItem.new(line:, list_indent:, indent: spaces.length, content: rest, bullet: bullet), :eol)
+      ListItem.new(bullet:, line:, lnb:, list_indent:, indent: spaces.length, content: rest)
     end
 
     def _scan_text(line, lnb)
       LeadingSpacesRgx.match(line) => [_, spaces, text]
-      Pair(Text.new(content: text, indent: spaces.length, line:, lnb:), :eol)
+      Text.new(content: text, indent: spaces.length, line:, lnb:)
     end
 
     def _scan_with_rest(line, lnb)
-      pair = _scan_with_rest_base(line, lnb)
-      _get_rest_from_pair(pair)
+      token = _scan_with_rest_base(line, lnb)
+      _get_rest_from_pair(token)
     end
 
     def _scan_with_rest_base(line, lnb)
-        case line
-        when HeaderRgx
-          _scan_header(line, lnb, Regexp.last_match)
-        when ListItemRgx
-          _scan_list_item(line, lnb, Regexp.last_match)
-        else
-          _scan_text(line, lnb)
-        end
+      case line
+      when HeaderRgx
+        _scan_header(line, lnb, Regexp.last_match)
+      when ListItemRgx
+        _scan_list_item(line, lnb, Regexp.last_match)
+      else
+        _scan_text(line, lnb)
+      end
     end
   end
 end
