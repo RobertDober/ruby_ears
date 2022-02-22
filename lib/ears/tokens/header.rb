@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require "lab42/data_class"
-
 module Ears
-  class Pair < DataClass(token: nil, rest: "")
+  module Tokens
+    extend self
+    class Header < token(:level)
+    end
   end
 end
 # SPDX-License-Identifier: Apache-2.0

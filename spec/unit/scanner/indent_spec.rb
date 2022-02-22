@@ -22,8 +22,5 @@ RSpec.describe Ears::Scanner, type: :scanner do
       assert_token line, indent(line:, content: "a", indent: 5)
     end
   end
-
-  context "text w/o indent" do
-  end
 end
 # SPDX-License-Identifier: Apache-2.0

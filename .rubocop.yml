@@ -34,6 +34,9 @@ Metrics/BlockLength:
 # Metrics/MethodLength:
 #    Exclude:
 
+Naming/ConstantName:
+  Enabled: false
+
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 
@@ -60,6 +63,9 @@ Style/Lambda:
   Enabled: false
 
 Style/LambdaCall:
+  Enabled: false
+
+Style/ModuleFunction:
   Enabled: false
 
 Style/FrozenStringLiteralComment:

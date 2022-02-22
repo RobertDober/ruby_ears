@@ -2,7 +2,7 @@
 
 module Ears
   module Tokens
-    class Blank < DataClass(lnb: 0, ann: nil, ial: nil)
+    class Text < token
     end
   end
 end

@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     ruby_ears (0.1.0)
-      lab42_data_class (~> 0.3.3)
+      lab42_data_class (~> 0.4.1)
       zeitwerk (~> 2.5.4)
 
 GEM
@@ -27,14 +27,14 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    lab42_data_class (0.3.3)
+    lab42_data_class (0.4.1)
     method_source (1.0.0)
-    nokogiri (1.13.1-x86_64-darwin)
+    nokogiri (1.13.3-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.1-x86_64-linux)
+    nokogiri (1.13.3-x86_64-linux)
       racc (~> 1.4)
     parallel (1.21.0)
-    parser (3.1.0.0)
+    parser (3.1.1.0)
       ast (~> 2.4.1)
     polyglot (0.3.5)
     pry (0.13.1)
@@ -76,8 +76,8 @@ GEM
       rubocop-ast (>= 1.15.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.15.2)
-      parser (>= 3.0.1.1)
+    rubocop-ast (1.16.0)
+      parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
     simplecov (0.21.2)
       docile (~> 1.1)

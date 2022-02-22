@@ -37,7 +37,7 @@ jobs:
 
       # TODO: Fix parsing error on ./coverage/lcov.info (gem version?)
       # Error:  "2022-02-18T11:31:45.593Z"  'error from lcovParse: ' 'Failed to parse string'
-      # - name: Coveralls GitHub Action
-      #   uses: coverallsapp/github-action@1.1.3
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@1.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
