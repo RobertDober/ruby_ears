@@ -59,10 +59,19 @@ Style/DoubleNegation:
 Style/EmptyMethod:
   Enabled: false
 
+Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
 Style/Lambda:
   Enabled: false
 
 Style/LambdaCall:
+  Enabled: false
+
+Style/MixinGrouping:
   Enabled: false
 
 Style/ModuleFunction:

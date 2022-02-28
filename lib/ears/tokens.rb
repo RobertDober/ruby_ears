@@ -8,6 +8,7 @@ module Ears
 
     def token(*a, **k)
       DataClass(*(a + BaseAttributes), **BaseKeywords.merge(k))
+        .with_constraint(lnb: -> { _1 >= 0 })
     end
   end
 end

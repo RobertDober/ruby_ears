@@ -15,15 +15,25 @@ module Support
     end
 
     def indent(**args)
-      Ears::Tokens::Indent.new(**args)
+      Ears::Tokens::Indent.new(**_args(args))
     end
 
     def li(**args)
-      Ears::Tokens::ListItem.new(**args)
+      Ears::Tokens::ListItem.new(**_args(args))
+    end
+
+    def th_break(**args)
+      args[:content] = args[:line].gsub(" ", "")
+      args[:indent] = 0
+      Ears::Tokens::ThematicBreak.new(**_args(args))
     end
 
     def text(**args)
-      Ears::Tokens::Text.new(**args)
+      Ears::Tokens::Text.new(**_args(args))
+    end
+
+    def _args(args)
+      {content: args[:line].lstrip, indent: args[:line][/^\s*/].length, lnb: 0}.merge(args)
     end
   end
 end

@@ -2,8 +2,15 @@
 
 module Ears
   module Tokens
-    extend self
-    class Indent < token
+    class Indent
+      include Token
+      extend DataClass
+      Rgx = /\A (\s{4,}) (.*) /x
+
+      def self.make(line, lnb, match)
+        match => [_, spaces, content]
+        new(content:, line:, lnb:, indent: spaces.length)
+      end
     end
   end
 end

@@ -2,7 +2,13 @@
 
 module Ears
   module Tokens
-    class Text < token
+    class Text
+      include Token
+      extend DataClass
+
+      derive :content do
+        _1.line.strip
+      end
     end
   end
 end
