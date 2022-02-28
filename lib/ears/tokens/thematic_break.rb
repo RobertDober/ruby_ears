@@ -3,20 +3,20 @@
 module Ears
   module Tokens
     class ThematicBreak
-      extend Tokens
+      include Token
       extend Lab42::DataClass # must be last in extension list
 
       BreakTypes = { "*" => :thick, "_" => :medium, "-" => :thin }.freeze
-      Rgx = /\A (\s*) ([-_*]) (?:\s*\1){2,} \s* \z/x
+      Rgx = /\A \s* ([-_*]) (?:\s*\1){2,} \s* \z/x
 
       def self.make(line, lnb, match)
-        match => [_, spaces, type_str]
+        match => [_, type_str]
         type = BreakTypes[type_str]
-        new(line:, lnb:, type:, indent: spaces.length)
+        new(line:, lnb:, type:)
       end
 
+      attributes :type
       constraint :type, Set.new(BreakTypes.values)
-
     end
   end
 end

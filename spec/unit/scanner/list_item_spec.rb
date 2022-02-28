@@ -6,7 +6,7 @@ RSpec.describe Ears::Scanner, type: :scanner do
     end
     it "needs a space after the bullet" do
       line = "-Hello"
-      assert_token line, text(content: line, line:)
+      assert_token line, text(line:)
     end
     it "can have a rest too" do
       line = " * `World`"

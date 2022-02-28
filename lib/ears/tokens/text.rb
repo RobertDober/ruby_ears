@@ -6,9 +6,14 @@ module Ears
       include Token
       extend DataClass
 
-      derive :content do
-        _1.line.strip
+      LeadingSpacesRgx = /\A (\s*) (.*) /x
+
+      def self.make(line, lnb)
+        LeadingSpacesRgx.match(line) => [_, spaces, content]
+        new(content:, indent: spaces.length, line:, lnb:)
       end
+
+      attributes :content
     end
   end
 end

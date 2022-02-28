@@ -1,5 +1,4 @@
 RSpec.describe Ears::Scanner, type: :scanner do
-
   context "thematic break" do
     it "with *" do
       line = "***"
@@ -74,20 +73,11 @@ RSpec.describe Ears::Scanner, type: :scanner do
     end
     it "x at the end, spoils it all" do
       line = "- - - - x   "
-      assert_token line, li(line:, content: line[2..-1], list_indent: 2, bullet: "-")
+      assert_token line, li(line:, content: line[2..], list_indent: 2, bullet: "-")
     end
     it "x at the beginning, spoils it all" do
       line = " x - - - -   "
       assert_token line, text(line:)
-    end
-  end
-
-  context "great error messages" do
-    it "protects against incoherent calls" do
-      expect do
-        Ears::Tokens::ThematicBreak.from_line(line: "x", lnb: 32)
-      end
-        .to raise_error(ArgumentError, %{bad thematic break line passed in "x" lnb: 32})
     end
   end
 end

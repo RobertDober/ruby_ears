@@ -7,6 +7,8 @@ module Ears
       extend DataClass
       Rgx = /\A (\s{4,}) (.*) /x
 
+      attributes :content
+
       def self.make(line, lnb, match)
         match => [_, spaces, content]
         new(content:, line:, lnb:, indent: spaces.length)

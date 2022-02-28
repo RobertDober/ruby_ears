@@ -8,11 +8,11 @@ module Ears
 
       Rgx = /\A (\s*) (\#{1,6}) \s (.*) /x
 
+      attributes :content, :level
       def self.make(line, lnb, match)
-         match => [_, spaces, headers, content]
-         new(line:, lnb:, content:, indent: spaces.length, level: headers.length)
+        match => [_, spaces, headers, content]
+        new(line:, lnb:, content:, indent: spaces.length, level: headers.length)
       end
-
     end
   end
 end

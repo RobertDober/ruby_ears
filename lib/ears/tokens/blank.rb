@@ -2,8 +2,15 @@
 
 module Ears
   module Tokens
-    class Blank < DataClass(lnb: 0, ann: nil, ial: nil)
+    class Blank
+      include Token
+      extend Lab42::DataClass
+
       Rgx = /\A \s* \z/x
+
+      derive(:content) { "" }
+      derive(:indent) { 0 }
+      derive(:line) { "" }
     end
   end
 end

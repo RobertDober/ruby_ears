@@ -2,12 +2,12 @@ RSpec.describe Ears::Scanner, type: :scanner do
   context "just text" do
     it "will return the whole line" do
       line = "some # text"
-      assert_token line, text(line:, content: line)
+      assert_token line, text(line:)
     end
 
     it "will not break on escaped backtix" do
       line = "escaped \\`"
-      assert_token line, text(line:, content: line)
+      assert_token line, text(line:)
     end
   end
 

@@ -9,17 +9,17 @@ RSpec.describe Ears::Scanner, type: :scanner do
     end
 
     it "gets us text" do
-      assert_token " a", text(line: " a", content: "a", indent: 1)
+      assert_token " a", text(line: " a", indent: 1)
     end
 
     it "or an indent" do
       line = "    a"
-      assert_token line, indent(line:, content: "a", indent: 4)
+      assert_token line, indent(line:, indent: 4)
     end
 
     it "can indent even more" do
       line = "     a"
-      assert_token line, indent(line:, content: "a", indent: 5)
+      assert_token line, indent(line:, indent: 5)
     end
   end
 

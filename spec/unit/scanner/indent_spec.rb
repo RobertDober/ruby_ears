@@ -5,7 +5,7 @@ RSpec.describe Ears::Scanner, type: :scanner do
     end
 
     it "still empty" do
-      assert_token " ", blank
+      assert_token " ", blank(line: " ")
     end
 
     it "gets us text" do

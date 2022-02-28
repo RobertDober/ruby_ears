@@ -6,15 +6,13 @@ module Ears
     include Tokens
 
     BacktixRgx = / ((?<!\\) `+) /x
-    HeaderRgx = /\A (\s*) (\#{1,6}) \s (.*) /x
-    LeadingSpacesRgx = /\A (\s*) (.*) /x
 
     def scan(line, lnb)
       token = _scan_for_tokens_wo_backtix(line, lnb)
       if token
         Pair(token, :eol)
       else
-        _make_pair(scan_for_tokens_with_backtix)
+        _make_pair(_scan_for_tokens_with_backtix(line, lnb))
       end
     end
 
@@ -29,11 +27,6 @@ module Ears
       end
     end
 
-    def _scan_text(line, lnb)
-      LeadingSpacesRgx.match(line) => [_, spaces, content]
-      Text.new(content:, indent: spaces.length, line:, lnb:)
-    end
-
     def _scan_for_tokens_with_backtix(line, lnb)
       case line
       when Header::Rgx
@@ -41,7 +34,7 @@ module Ears
       when ListItem::Rgx
         ListItem.make(line, lnb, Regexp.last_match)
       else
-        _scan_text(line, lnb)
+        Text.make(line, lnb)
       end
     end
 

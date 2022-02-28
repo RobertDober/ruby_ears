@@ -14,11 +14,11 @@ RSpec.describe Ears::Scanner, type: :scanner do
   context "no headers, because..." do
     it "misses a space after the #" do
       line = "###Not a headline"
-      assert_token line, text(line:, content: line)
+      assert_token line, text(line:)
     end
     it "has too many #s" do
       line = "####### Not a headline"
-      assert_token line, text(line:, content: line)
+      assert_token line, text(line:)
     end
   end
 end

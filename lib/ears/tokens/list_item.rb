@@ -13,8 +13,9 @@ module Ears
 
       def self.make(line, lnb, match)
         match => [_, spaces, bullet, li_space, content]
-        list_indent = spaces.length + bullet.length + li_space.length
-        new(bullet:, content:, list_indent:)
+        indent = spaces.length
+        list_indent = indent + bullet.length + li_space.length
+        new(bullet:, content:, indent:, line:, list_indent:, lnb:)
       end
 
       attributes :bullet, :content, :list_indent
