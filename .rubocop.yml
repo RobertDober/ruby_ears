@@ -89,3 +89,6 @@ Style/StringLiterals:
 
 Style/TrailingBodyOnModule:
   Enabled: false
+
+Style/WhileUntilModifier:
+  Enabled: false

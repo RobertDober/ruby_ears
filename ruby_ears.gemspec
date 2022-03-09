@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/robertdober/ruby_ears"
   s.licenses    = %w[Apache-2.0]
 
-  s.add_dependency 'lab42_data_class', '~> 0.7.1'
+  s.add_dependency 'lab42_data_class', '~> 0.8.3'
   s.add_dependency 'zeitwerk', '~> 2.5.4'
 
   s.required_ruby_version = '>= 3.1.0'

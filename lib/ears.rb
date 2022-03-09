@@ -5,7 +5,6 @@ loader = Zeitwerk::Loader.for_gem
 loader.setup
 
 require "lab42/data_class"
-# require_relative "../../../lab42/lab42_data_class/lib/lab42/data_class"
 include Lab42
 
 class MatchData

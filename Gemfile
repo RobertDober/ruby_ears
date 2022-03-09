@@ -16,4 +16,5 @@ group :development, :test do
   gem 'simplecov-lcov', '~> 0.8.0'
   gem "solargraph"
   gem "treetop", "~> 1.6.11"
+  # gem "lab42_data_class", path: "/home/robert/gh/lab42/lab42_data_class"
 end
