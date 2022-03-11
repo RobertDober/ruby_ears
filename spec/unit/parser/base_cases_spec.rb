@@ -12,6 +12,15 @@ RSpec.describe Ears::Parser, type: :parser do
   end
 
   context "text" do
+    it "parses a line of text" do
+      expect_parsed("alpha").to eq(List("alpha"))
+    end
+    it "parses some line of text" do
+      expect_parsed(%w[alpha beta]).to eq(List("alpha\nbeta"))
+    end
+    it "ignores leading ws" do
+      expect_parsed(["", "alpha", "beta"]).to eq(List("alpha\nbeta"))
+    end
   end
 end
 #  SPDX-License-Identifier: Apache-2.0

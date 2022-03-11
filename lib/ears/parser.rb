@@ -19,6 +19,10 @@ module Ears
       case state.token
       when Blank
         state.add(:eol)
+      when Text
+        state.add_text
+      else
+        raise SyntaxError, "unexpected input #{state.token.inspect}"
       end
     end
   end

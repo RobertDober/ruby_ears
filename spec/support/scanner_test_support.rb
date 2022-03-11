@@ -1,48 +1,56 @@
 module Support
   module ScannerTest
-    def assert_token(input, token, rest: :eol, lnb: 0)
-      result = Ears::Scanner.scan(input, lnb)
-      expected = Pair(token, rest)
-      expect(result).to eq(expected)
+
+    DefaultValues = {
+      ann: nil,
+      ial: nil,
+      lnb: 0,
+      rest: :eol
+    }
+    def assert_token line, type, **values
+      values_with_defaults =
+        DefaultValues.merge(values)
+      result = Ears::Scanner.scan(line, values_with_defaults[:lnb])
+      expect(result.first).to be_kind_of(type)
+      expect(result.first.to_h).to eq(values_with_defaults)
+      expect(result.second).to eq(values_with_defaults[:rest])
     end
 
-    def blank(**args)
-      Ears::Tokens::Blank.new(**args)
-    end
 
-    def headline(**args)
-      Ears::Tokens::Header.new(**args)
-    end
+    # def backtix(**args)
+    #   Ears::Tokens::Backtix.new(**args)
+    # end
 
-    def indent(**args)
-      Ears::Tokens::Indent.new(**_with_content(args))
-    end
 
-    def li(**args)
-      Ears::Tokens::ListItem.new(**_with_indent(args))
-    end
+  end
+end
 
-    def th_break(**args)
-      Ears::Tokens::ThematicBreak.new(**args)
-    end
+module ImportTokens
+  extend self
+  SplitterRgx = /([[:upper:]])/
+  def underscore(name)
+    name
+      .to_s
+      .split(SplitterRgx) => _, *parts
+    parts
+      .each_slice(2)
+      .map(&:join)
+      .join("_")
+      .downcase
+  end
 
-    def text(**args)
-      Ears::Tokens::Text.new(**_with_content(args))
-    end
-
-    private
-
-    def _with_indent(args)
-      { indent: args[:line][/^\s*/].length, lnb: 0 }.merge(args)
-    end
-
-    def _with_content(args)
-      { content: args[:line].lstrip }.merge(_with_indent(args))
+  Ears::Tokens.constants.each do |konst|
+    value = Ears::Tokens.const_get(konst)
+    module_eval do
+      define_method underscore(konst) do
+        value
+      end
     end
   end
 end
 
 RSpec.configure do |conf|
   conf.include Support::ScannerTest, type: :scanner
+  conf.include ImportTokens
 end
 #  SPDX-License-Identifier: Apache-2.0

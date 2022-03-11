@@ -10,7 +10,7 @@ module Ears
 
       attributes :content, :level
       def self.make(line, lnb, match)
-        match => [_, spaces, headers, content]
+        match => _, spaces, headers, content
         new(line:, lnb:, content:, indent: spaces.length, level: headers.length)
       end
     end

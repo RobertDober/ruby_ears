@@ -20,7 +20,7 @@ module Ears
 
     def _make_pair(token)
       case token.content.split(BacktixRgx, 2)
-      in [ prefix, backtix, suffix ]
+      in  prefix, backtix, suffix
         Pair(token.merge(content: prefix), backtix + suffix)
       else
         Pair(token, :eol)
@@ -33,6 +33,8 @@ module Ears
         Header.make(line, lnb, Regexp.last_match)
       when ListItem::Rgx
         ListItem.make(line, lnb, Regexp.last_match)
+      when Backtix::Rgx
+        Backtix.make(line, lnb, Regexp.last_match)
       else
         Text.make(line, lnb)
       end
